@@ -66,7 +66,6 @@ class XYImageBrowser: UIView,UICollectionViewDelegate,UICollectionViewDataSource
     var isShowMorePanel = false                         //是否显示更多操作的面板
     var morePanel:UITableView?                          //更多面板
     var panelMenu = ["保存图片","识别图中二维码"]           //面板内容
-    let coverView = UIView()                            //遮盖视图
     weak var delegate:ImageBrowserDelegate?             //代理
     
     var originRectArray = [NSValue]()                   //存放图片原位置的数组
@@ -152,10 +151,14 @@ class XYImageBrowser: UIView,UICollectionViewDelegate,UICollectionViewDataSource
     
     //MARK:点击图片时，关闭图片浏览器
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if touches.count == 0 {//关闭图片浏览器
+        if !self.isShowMorePanel {//关闭图片浏览器
             if !isAnimating {//如果不在进行动画，才能关闭图片浏览器
                 //将window的优先级恢复成默认
                 UIApplication.sharedApplication().keyWindow?.windowLevel = UIWindowLevelNormal
+                //移除计数器的label
+                self.counterLabel.removeFromSuperview()
+                //更多的菜单按钮
+                self.moreButton.removeFromSuperview()
                 //判断当前浏览器模式，如果是网络图片模式，并且正在下载的进度情况下，视图透明度变为0后移除
                 if self.browserModel == .NetModel && self.imageDownloadProgress[self.currentImageIndex] < 1 {
                     UIView.animateWithDuration(ImageBrowserModel.beginOrFinishAnimationDuration, animations: {
@@ -167,8 +170,6 @@ class XYImageBrowser: UIView,UICollectionViewDelegate,UICollectionViewDataSource
                     self.backgroundColor = UIColor.clearColor()
                     //获取当前图片原位置
                     let originFrame = self.originRectArray[self.currentImageIndex].CGRectValue()
-                    //移除计数器的label
-                    self.counterLabel.removeFromSuperview()
                     
                     //是否需要此操作
                     let originImageView = self.imageViewArray![self.currentImageIndex]
@@ -232,9 +233,11 @@ class XYImageBrowser: UIView,UICollectionViewDelegate,UICollectionViewDataSource
         counterLabel.frame = CGRectMake((mainbounds.width-200)/2.0, 22, 200, 25)
         self.addSubview(self.counterLabel)
         //右上角的点击按钮
-        moreButton.setTitle("👍", forState: .Normal)
-        moreButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        if ImageBrowserModel.bundlePath != nil && ImageBrowserModel.bundlePath != ""{
+            moreButton.setImage(UIImage.init(named: ImageBrowserModel.bundlePath!.stringByAppendingString("/dian.tiff")), forState: .Normal)
+        }
         moreButton.frame = CGRectMake(mainbounds.width-70, 22, 50, 25)
+        moreButton.imageEdgeInsets = UIEdgeInsetsMake(3, 10, 3, 10)
         moreButton.addTarget(self, action: #selector(moreAction), forControlEvents: .TouchUpInside)
         self.addSubview(moreButton)
     }
@@ -312,24 +315,20 @@ class XYImageBrowser: UIView,UICollectionViewDelegate,UICollectionViewDataSource
     
     //MARK:关闭菜单面板
     func closePanel(){
+        self.isShowMorePanel = false
         UIView.animateWithDuration(0.5, animations: {
             self.morePanel?.frame = CGRectMake(0, self.bounds.height, self.bounds.width, 44*CGFloat(self.panelMenu.count+1))
             }, completion: { (flag) in
-                self.coverView.removeFromSuperview()
+                
         })
     }
     
     //MARK:打开菜单面板
     func openPanel(){
+        self.isShowMorePanel = true
         //呼出面板
-        self.coverView.frame = mainbounds
-        self.coverView.backgroundColor = UIColor.grayColor()
-        self.coverView.alpha = 0.1
         if self.morePanel == nil {
-            self.addSubview(coverView)
             self.morePanelInitial()
-        }else{
-            self.insertSubview(coverView, belowSubview: self.morePanel!)
         }
         UIView.animateWithDuration(0.5, animations: {
             self.morePanel?.frame = CGRectMake(0, self.bounds.height - 44*CGFloat(self.panelMenu.count+1), self.bounds.width, 44*CGFloat(self.panelMenu.count+1))

@@ -106,7 +106,6 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         }
         return head
     }
-
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if indexPath.section == 0 {

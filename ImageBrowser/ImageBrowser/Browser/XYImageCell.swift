@@ -38,6 +38,11 @@ class XYImageCell: UICollectionViewCell,UIScrollViewDelegate {
     //图片的url地址
     var imageUrl = ""
     
+    //加载视图
+    let loadingView = CircleProcess.init(frame: CGRectMake(0, 0, 50, 50))
+    //占位视图
+    let placeholderView = UIImageView.init()
+    
     func setContentInfo(){
         //添加一个UIScrollView
         containerView.backgroundColor = UIColor.blackColor()
@@ -64,7 +69,6 @@ class XYImageCell: UICollectionViewCell,UIScrollViewDelegate {
         self.addGestureRecognizer(doubleTapGesture!)
     }
     
-    let loadingView = CircleProcess.init(frame: CGRectMake(0, 0, 50, 50))
     //MARK:图片设置
     func imageSetting(){
         
@@ -73,6 +77,13 @@ class XYImageCell: UICollectionViewCell,UIScrollViewDelegate {
             //判断图片是否有缓存
             SDImageCache.sharedImageCache().queryDiskCacheForKey(imageUrl, done: { (downloadImage, cacheType) in
                 if downloadImage == nil{//图片没有缓存的情况下，开始下载图片
+                    //添加占位视图
+                    if ImageBrowserModel.bundlePath != nil && ImageBrowserModel.bundlePath != ""{
+                        self.placeholderView.image = UIImage.init(named: ImageBrowserModel.bundlePath!.stringByAppendingString("/pic_loading.tiff"))
+                    }
+                    self.placeholderView.center = CGPointMake(self.cellBounds.width/2.0, self.cellBounds.height/2.0)
+                    self.placeholderView.bounds = CGRectMake(0, 0, self.cellBounds.width/1.5, self.cellBounds.width/2.0)
+                    self.contentView.addSubview(self.placeholderView)
                     //添加加载视图
                     self.loadingView.center = CGPointMake(self.cellBounds.width/2.0, self.cellBounds.height/2.0)
                     self.loadingView.circleTintColor = UIColor.whiteColor()
@@ -88,10 +99,18 @@ class XYImageCell: UICollectionViewCell,UIScrollViewDelegate {
                             self.imageDownloadProgress!(self.loadingView.process,self.tag)
                         }
                         }, completed: { (downloadImage, error, cacheType, url) in
-                            //恢复操作
-                            self.containerView.userInteractionEnabled = true
-                            self.loadingView.removeFromSuperview()
-                            self.setImageAttribute()
+                            if error == nil{//下载完成
+                                //恢复操作
+                                self.containerView.userInteractionEnabled = true
+                                self.placeholderView.removeFromSuperview()
+                                self.loadingView.removeFromSuperview()
+                                self.setImageAttribute()
+                            }else{//下载出错
+                                if ImageBrowserModel.bundlePath != nil && ImageBrowserModel.bundlePath != ""{
+                                    self.placeholderView.image = UIImage.init(named: ImageBrowserModel.bundlePath!.stringByAppendingString("/pic_loading_fail.tiff"))
+                                }
+                                self.loadingView.removeFromSuperview()
+                            }
                     })
                 }else{//图片有缓存的情况下，直接使用图片
                     self.imageView.image = downloadImage
