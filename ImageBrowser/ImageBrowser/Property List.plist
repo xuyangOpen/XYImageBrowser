@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>OriginImage</key>
+		<string>http://img.gaoxiaogif.cn/GaoxiaoGiffiles/images/2015/11/12/woquzhenkanbuxiaquliao.gif</string>
+		<key>Thumbnail</key>
+		<string>http://img.gaoxiaogif.cn/GaoxiaoGiffiles/images/2015/11/12/woquzhenkanbuxiaquliao.gif</string>
+	</dict>
+	<dict>
+		<key>OriginImage</key>
+		<string>http://www9.53kf.com/1476928247.png</string>
+		<key>Thumbnail</key>
+		<string>http://www9.53kf.com/1476860381.png</string>
+	</dict>
+	<dict>
+		<key>OriginImage</key>
+		<string>http://www9.53kf.com/1476928246.png</string>
+		<key>Thumbnail</key>
+		<string>http://www9.53kf.com/1476860452.png</string>
+	</dict>
+	<dict>
+		<key>OriginImage</key>
+		<string>http://www9.53kf.com/1476927126.png</string>
+		<key>Thumbnail</key>
+		<string>http://www9.53kf.com/1476860337.png</string>
+	</dict>
+</array>
+</plist>
