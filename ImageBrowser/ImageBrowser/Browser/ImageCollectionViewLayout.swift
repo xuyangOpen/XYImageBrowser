@@ -10,33 +10,33 @@ import UIKit
 
 class ImageCollectionViewLayout: UICollectionViewFlowLayout {
 
-    override func collectionViewContentSize() -> CGSize {
+    override var collectionViewContentSize : CGSize {
         
         let count = CGFloat((self.collectionView?.dataSource?.collectionView(self.collectionView!, numberOfItemsInSection: 0))!)
         //设置
-        return CGSizeMake(self.collectionView!.frame.size.width * count , self.collectionView!.frame.size.height)
+        return CGSize(width: self.collectionView!.frame.size.width * count , height: self.collectionView!.frame.size.height)
     }
     
-    func frameForItemAtIndexPath(indexPath:NSIndexPath) -> CGRect{
-        return CGRectMake(CGFloat(indexPath.item)*(self.collectionView!.frame.size.width), 0, self.collectionView!.frame.size.width, self.collectionView!.frame.size.height)
+    func frameForItemAtIndexPath(_ indexPath:IndexPath) -> CGRect{
+        return CGRect(x: CGFloat(indexPath.item)*(self.collectionView!.frame.size.width), y: 0, width: self.collectionView!.frame.size.width, height: self.collectionView!.frame.size.height)
     }
     
-    override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         //这里必须使用copy，不然会有警告⚠️
-        let attr = super.layoutAttributesForItemAtIndexPath(indexPath)?.copy() as! UICollectionViewLayoutAttributes
+        let attr = super.layoutAttributesForItem(at: indexPath)?.copy() as! UICollectionViewLayoutAttributes
         attr.frame = self.frameForItemAtIndexPath(indexPath)
         return attr
     }
     
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let count = self.collectionView?.dataSource?.collectionView(self.collectionView!, numberOfItemsInSection: 0)
         var attrs = [UICollectionViewLayoutAttributes]()
         for idx in 0..<count! {
             var attr:UICollectionViewLayoutAttributes?
-            let idxPath = NSIndexPath.init(forRow: idx, inSection: 0)
+            let idxPath = IndexPath.init(row: idx, section: 0)
             let itemFrame = self.frameForItemAtIndexPath(idxPath)
-            if CGRectIntersectsRect(itemFrame, rect) {
-                attr = self.layoutAttributesForItemAtIndexPath(idxPath)
+            if itemFrame.intersects(rect) {
+                attr = self.layoutAttributesForItem(at: idxPath)
                 attrs.append(attr!)
             }
         }

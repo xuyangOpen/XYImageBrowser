@@ -11,14 +11,14 @@ import UIKit
 class CollectionHeadReusableView: UICollectionReusableView {
     
     let titleLable = UILabel()
-    let cellBound = UIScreen.mainScreen().bounds
+    let cellBound = UIScreen.main.bounds
     
-    func setHeadTitle(title:String){
+    func setHeadTitle(_ title:String){
         self.titleLable.text = title
-        self.titleLable.textColor = UIColor.blackColor()
-        self.titleLable.textAlignment = .Center
+        self.titleLable.textColor = UIColor.black
+        self.titleLable.textAlignment = .center
         self.titleLable.frame = self.bounds
         self.addSubview(self.titleLable)
-        self.backgroundColor = UIColor.lightGrayColor()
+        self.backgroundColor = UIColor.lightGray
     }
 }

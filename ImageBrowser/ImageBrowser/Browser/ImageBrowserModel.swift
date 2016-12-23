@@ -20,5 +20,5 @@ class ImageBrowserModel: NSObject {
     static var isNeedPlaceholder = true                 //是否需要白色占位
     
     //资源文件路径
-    static let bundlePath = NSBundle.mainBundle().resourcePath?.stringByAppendingString("/XYImageBrowserBundle.bundle/Contents/Resources")
+    static let bundlePath = (Bundle.main.resourcePath)! + "/XYImageBrowserBundle.bundle/Contents/Resources"
 }

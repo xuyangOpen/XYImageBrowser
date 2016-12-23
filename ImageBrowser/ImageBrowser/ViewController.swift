@@ -12,7 +12,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
 
     let reuseIdentifier = "imageCell"
     let headReuseIdentifier = "headImageCell"
-    let bounds = UIScreen.mainScreen().bounds
+    let bounds = UIScreen.main.bounds
     var imageCollectionView:UICollectionView?
     let imagesArray = ["show1.jpg","show2.jpg","show3.jpg","dynamic1.gif","show4.jpg","show5.jpg","show6.jpeg","show7.jpg","show8.PNG","1.pic_hd.jpg","qrcode.jpg"]
     
@@ -26,12 +26,12 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.white
         
         self.setCollectionView()
         
         //读取plist文件
-        let path = NSBundle.mainBundle().pathForResource("Property List", ofType: "plist")
+        let path = Bundle.main.path(forResource: "Property List", ofType: "plist")
         let tempArray = NSArray.init(contentsOfFile: path!)
         for i in 0..<tempArray!.count {
             let dic = tempArray![i] as! NSDictionary
@@ -44,32 +44,32 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     func setCollectionView(){
         //布局  每行3个item
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .Vertical//滚动方向
+        flowLayout.scrollDirection = .vertical//滚动方向
         flowLayout.minimumLineSpacing = 10//行间距
         flowLayout.minimumInteritemSpacing = 10//item间距
         let itemWidth = (bounds.width - 4*10) / 3.0 - 1
         let itemHeight:CGFloat = 75.0
-        flowLayout.itemSize = CGSizeMake(itemWidth, itemHeight)
+        flowLayout.itemSize = CGSize(width: itemWidth, height: itemHeight)
         flowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10)
-        flowLayout.headerReferenceSize = CGSizeMake(self.bounds.width, 50)
+        flowLayout.headerReferenceSize = CGSize(width: self.bounds.width, height: 50)
         //UICollectionView
-        self.imageCollectionView = UICollectionView.init(frame: CGRectMake(0, 22, self.bounds.width, self.bounds.height), collectionViewLayout: flowLayout)
-        self.imageCollectionView?.backgroundColor = UIColor.whiteColor()
+        self.imageCollectionView = UICollectionView.init(frame: CGRect(x: 0, y: 22, width: self.bounds.width, height: self.bounds.height), collectionViewLayout: flowLayout)
+        self.imageCollectionView?.backgroundColor = UIColor.white
         self.imageCollectionView?.delegate = self
         self.imageCollectionView?.dataSource = self
         
         //注册cell
-        self.imageCollectionView?.registerClass(CollectionImageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.imageCollectionView?.registerClass(CollectionHeadReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headReuseIdentifier)
+        self.imageCollectionView?.register(CollectionImageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.imageCollectionView?.register(CollectionHeadReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headReuseIdentifier)
         self.view.addSubview(self.imageCollectionView!)
     }
     
     //MARK:UICollectionView的代理方法
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
             return self.imagesArray.count
         }else {
@@ -77,8 +77,8 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         }
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let item = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! CollectionImageCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let item = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CollectionImageCell
         if indexPath.section == 0 {
             item.setImageViewInfo(self.imagesArray[indexPath.item])
             //添加图片数组
@@ -96,8 +96,8 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         return item
     }
     
-    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-        let head = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: headReuseIdentifier, forIndexPath: indexPath) as! CollectionHeadReusableView
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let head = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headReuseIdentifier, for: indexPath) as! CollectionHeadReusableView
 
         if indexPath.section == 0 {
             head.setHeadTitle("浏览本地图片")
@@ -107,7 +107,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         return head
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let browser = XYImageBrowser()
             //浏览图片的控件
@@ -131,8 +131,8 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     
     //MARK:图片浏览器的代理方法
     //MARK:保存图片的代理方法
-    func saveImageStatus(status: SaveStatus) {
-        if status == .Success {
+    func saveImageStatus(_ status: SaveStatus) {
+        if status == .success {
             print("图片保存成功")
         }else {
             print("图片保存失败")
@@ -140,9 +140,9 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     }
     
     //MARK:识别二维码的代理方法
-    func identificationCode(content: String?, failedReason: String?) {
+    func identificationCode(_ content: String?, failedReason: String?) {
         if failedReason != nil {
-            print(failedReason)
+            print(failedReason ?? "二维码为空")
         }else{
             print("二维码的内容为 = \(content)")
         }
