@@ -25,7 +25,6 @@ class XYImageCell: UICollectionViewCell,UIScrollViewDelegate {
     //手势属性
     var tapGesture:UITapGestureRecognizer?
     var doubleTapGesture:UITapGestureRecognizer?
-    var pinchGesture:UIPinchGestureRecognizer?
     //当前图片放大或者缩小倍数
     var currentScale:CGFloat = 1.0
     
@@ -151,6 +150,7 @@ class XYImageCell: UICollectionViewCell,UIScrollViewDelegate {
             containerView.contentSize = CGSize.zero
         }
         imageView.frame = CGRect(x: 0, y: imageViewHeight, width: cellBounds.width, height: height)
+        currentScale = 1.0
     }
     
     //MARK:单击手势
